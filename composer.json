@@ -17,5 +17,8 @@
     "minimum-stability": "dev",
     "version": "1.0.0",
     "prefer-stable": true,
-    "require": {}
+    "require": {
+        "php": ">=7.4",
+        "vendor/smaes":"1.0"
+    }
 }
