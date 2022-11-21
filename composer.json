@@ -1,11 +1,11 @@
 {
-    "name": "vendor/smaes",
+    "name": "smartedutech/smaes",
     "description": "SMAES: Smart Model Assessment for Education System",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Vendor\\Smaes\\": "src/"
+            "smartedutech\\Smaes\\": "src/"
         }
     },
     "authors": [
