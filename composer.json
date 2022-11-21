@@ -14,9 +14,7 @@
             "email": "oussama.limam@gmail.com"
         }
     ],
-    "minimum-stability": "stable", 
-    "version": "1.0.0",
-    "prefer-stable": true,
+    "minimum-stability": "stable",  
     "require": {
         "php": ">=7.4" 
     }
