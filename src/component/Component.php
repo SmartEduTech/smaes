@@ -1,6 +1,6 @@
 <?php 
 
-
+//TEST
 namespace smartedutech\smaes\component;
 class Component{
 
