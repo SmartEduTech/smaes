@@ -1,0 +1,104 @@
+{
+    "titre":"evaluation ecue"
+    ,"id":"ECUE"
+    ,"description":"Calcule de moyenne d'une ecue de licence et mastère"
+          ,"variabel_Entrer":{
+                "aa":{
+                    "type":"float"
+                    ,"value":""
+                }
+                ,"ds":{
+                    "type":"float|string"
+                    ,"value":""
+                }
+                ,"cc" :{
+                    "type":"float"
+                    ,"value":""
+                }
+                ,"exam":{
+                    "type":"float|string"
+                    ,"value":""
+                }
+                ,"Abs_Exam":{
+                    "type":false
+                    ,"value":""
+                }
+                ,"credit":{
+                    "type":"integer"
+                    ,"readonly":true
+                    ,"value":""
+                }
+                ,"sesion":{
+                    "type":"string" 
+                    ,"value":"parincipale"
+                }
+                ,"regime":{
+                    "type":"string" 
+                    ,"value":"mx"
+                }
+          } 
+          ,"Varibale_Sortie":{
+             "credit":{
+                "type":"integer"
+                ,"value":""
+                }
+                ,"moyenne":{
+                    "type":"float"
+                    ,"value":""
+                } 
+          }
+          ,"Roles":{
+                "calcule_moyenne":{
+                    "R1":{
+                        "Id":"Absence"
+                        ,"titre":"Gestion des absence"
+                        ,"RegleType":"logique"
+                        ,"Evaluation":{
+                             "Condition":"@exam=='ABS'" 
+                             ,"sortie":{
+                                "true":{
+                                    "affecter":{
+                                        "@Abs_Exam":"true"
+                                        ,"@exam":0
+                                    }
+                                }
+                                ,"false":{
+                                    "affecter":{
+                                        "@Abs_Exam":"false"
+                                    }
+                                }
+                             } 
+                         } 
+                         
+                     }
+                     ,"R2":{
+                        "Id":"calculer_CC"
+                        ,"titre":"Calcule de controle contenu"
+                        ,"RegleType":"arithmetique_logique"
+                        ,"Evaluation":{
+                            "condition":"@regime==mx"
+                            ,"sortie":{
+                                "true":{
+                                    "Formule":"@aa*0.1+@ds*0.3"
+                                    ,"affecter":{
+                                        "bind1":"@cc"
+                                    }
+                                }
+                            }
+                        }
+                     }
+                }
+                ,"calcule_credit":{
+                    "R1":{
+                        "Id":""
+                        ,"Name":""
+                        ,"RegleType":""
+                        ,"Evaluation":{
+                             "Condition":""  
+                         }  
+                     }
+                }
+             
+          }
+     
+     }
