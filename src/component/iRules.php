@@ -1,7 +1,7 @@
 <?php
 namespace smartedutech\smaes\component;
 
-interface iRoles{
+interface iRules{
     public function evaluer();
     
 }

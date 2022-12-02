@@ -47,7 +47,7 @@
                     ,"value":""
                 } 
           }
-          ,"Roles":{
+          ,"Rules":{
                 "calcule_moyenne":{
                     "R1":{
                         "Id":"Absence"
