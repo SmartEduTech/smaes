@@ -1,7 +1,8 @@
 <?php 
-namespace smartedutech\smaes\component;
+namespace smartedutech\smaes\component\variables;
  
 class Variable{
+    
     public string $_name;
     public string $_type;
     public  $_value;
@@ -15,7 +16,14 @@ class Variable{
         $this->_value=$value;
     }
 
-    public function verifier($value=""){
+
+    /**
+     * Summary of verifyTypeValue
+     * This function checks the type of the variable introduced by its type indicated in the json file
+     * @param mixed $value
+     * @return bool
+     */
+    public function verifyTypeValue($value=""){
         $tmpvalue=!empty($value) ? $value : $this->_value; 
         $All_type=explode("|",$this->_type);
         foreach($All_type as $ty){
