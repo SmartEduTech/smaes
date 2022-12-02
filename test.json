@@ -1,104 +1,101 @@
 {
-    "titre":"evaluation ecue"
-    ,"id":"ECUE"
-    ,"description":"Calcule de moyenne d'une ecue de licence et mastère"
-          ,"variabel_Entrer":{
-                "aa":{
+    "title":"évaluation ECUE"
+    ,"Id":"ECUE"
+    ,"description":"Calcule de moyenne d'elements constitutifs d'unité d'enseignement de Licence et Mastère"
+          ,"input_variables":{
+                "TP":{
                     "type":"float"
                     ,"value":""
                 }
-                ,"ds":{
+                ,"DS":{
                     "type":"float|string"
                     ,"value":""
                 }
-                ,"cc" :{
+                ,"CC" :{
                     "type":"float"
                     ,"value":""
                 }
-                ,"exam":{
+                ,"EXAM":{
                     "type":"float|string"
                     ,"value":""
                 }
-                ,"Abs_Exam":{
+                ,"Exam_ABS":{
                     "type":false
                     ,"value":""
                 }
                 ,"credit":{
-                    "type":"integer"
+                    "type":"float"
                     ,"readonly":true
                     ,"value":""
                 }
-                ,"sesion":{
+                ,"session":{
                     "type":"string" 
-                    ,"value":"parincipale"
+                    ,"value":"principale"
                 }
                 ,"regime":{
                     "type":"string" 
-                    ,"value":"mx"
+                    ,"value":"mixte"
                 }
           } 
-          ,"Varibale_Sortie":{
+          ,"output_variables":{
              "credit":{
-                "type":"integer"
+                "type":"float"
                 ,"value":""
                 }
-                ,"moyenne":{
+                ,"average":{
                     "type":"float"
                     ,"value":""
                 } 
           }
           ,"Rules":{
-                "calcule_moyenne":{
+                "calculate_average":{
                     "R1":{
                         "Id":"Absence"
-                        ,"titre":"Gestion des absence"
-                        ,"RegleType":"logique"
+                        ,"title":"Gestion des absences"
+                        ,"Rule_Type":"logic"
                         ,"Evaluation":{
-                             "Condition":"@exam=='ABS'" 
-                             ,"sortie":{
+                             "Condition":"@EXAM=='ABS'" 
+                             ,"output":{
                                 "true":{
-                                    "affecter":{
-                                        "@Abs_Exam":"true"
-                                        ,"@exam":0
+                                    "bind":{
+                                        "@Exam_ABS":"true"
+                                        ,"@EXAM":0
                                     }
                                 }
                                 ,"false":{
-                                    "affecter":{
-                                        "@Abs_Exam":"false"
+                                    "bind":{
+                                        "@Exam_ABS":"false"
                                     }
                                 }
-                             } 
-                         } 
-                         
-                     }
+                            }
+                            }
+                        }
                      ,"R2":{
                         "Id":"calculer_CC"
-                        ,"titre":"Calcule de controle contenu"
-                        ,"RegleType":"arithmetique_logique"
+                        ,"title":"Calcule de controle continu"
+                        ,"Rule_Type":"arithmetic_logic"
                         ,"Evaluation":{
-                            "condition":"@regime==mx"
-                            ,"sortie":{
+                            "condition":"@regime==mixte"
+                            ,"output":{
                                 "true":{
-                                    "Formule":"@aa*0.1+@ds*0.3"
-                                    ,"affecter":{
-                                        "bind1":"@cc"
+                                    "Formula":"@TP*0.1+@DS*0.3"
+                                    ,"bind":{
+                                        "bind1":"@CC"
                                     }
                                 }
                             }
                         }
                      }
                 }
-                ,"calcule_credit":{
+                ,"calculate_credits":{
                     "R1":{
                         "Id":""
-                        ,"Name":""
-                        ,"RegleType":""
+                        ,"title":""
+                        ,"Rule_Type":""
                         ,"Evaluation":{
-                             "Condition":""  
-                         }  
-                     }
-                }
-             
-          }
-     
-     }
+                             "Condition":""
+                            }
+                        }
+                    }
+            }
+        }

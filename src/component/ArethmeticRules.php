@@ -1,7 +1,7 @@
 <?php 
 namespace smartedutech\smaes\component;
 
-class ArethmetiqueRules implements iRules{
+class ArethmeticRules implements iRules{
     public function evaluer()
     {
         
