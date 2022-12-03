@@ -19,7 +19,7 @@ class Variable{
 
     /**
      * Summary of verifyTypeValue
-     * This function checks the type of the variable introduced by its type indicated in the json file
+     * This function checks the type of the introduced variables by its type indicated in the json file
      * @param mixed $value
      * @return bool
      */

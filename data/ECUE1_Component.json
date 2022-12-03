@@ -72,15 +72,14 @@
                         }
                      ,"R2":{
                         "Id":"calculer_CC"
-                        ,"title":"Calcule de controle continu"
+                        ,"title":"Calcule du controle continu"
                         ,"Rule_Type":"arithmetic_logic"
                         ,"Evaluation":{
                             "condition":"@regime==mixte"
                             ,"output":{
                                 "true":{
-                                    "Formula":"@TP*0.1+@DS*0.3"
-                                    ,"bind":{
-                                        "bind1":"@CC"
+                                    "bind":{
+                                        "@CC":"@TP*0.1+@DS*0.3"
                                     }
                                 }
                             }
