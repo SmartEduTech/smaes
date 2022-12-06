@@ -1,5 +1,6 @@
 <?php
 
+namespace smartedutech\smaes\methods;
 abstract class Methods {
     public static function SUM()
     {

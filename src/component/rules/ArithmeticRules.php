@@ -1,10 +1,11 @@
 <?php 
 namespace smartedutech\smaes\component\rules;
 
-class ArithmeticRules extends Rules implements iRules{
+// class ArithmeticRules extends Rules implements iRules{
+class ArithmeticRules implements iRules{
     public function evaluate()
     {
-        echo "evaluate de ArithmeticRules";
+        return 3;
 
     }
 }

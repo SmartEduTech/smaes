@@ -12,8 +12,12 @@ class SmartModel{
     public function evaluate(string $JSON_file, $array_marks = []){
         //prendre en param un fichier JSON + les notes TP, DS et EXAM
         //et declanche l evaluation
+        //1-json variables type verification
+        //2-json rules type verification 
+        //3-eval(json rule output)
+
     }
-    public function findPropertyComponent(string $JSON_file, $propertyName){
+    public function findPropertyComponent(string $JSON_file, string $propertyName){
         //prend en param le fichier JSON de la composante ainsi que le nom de la propriété cherché dans cette composante
         //et retourne la valeur la propriété passé en param (apres traitement et non pas la valeur initiale)
         return "$propertyName = propertyValue after evaluation ";
