@@ -3,38 +3,11 @@ namespace smartedutech\smaes\component\rules;
 
 class Rules
 {
- private string $_IDR;
- private string $_title;
- private string $_ruleType;
- private object $_evaluation;
- private string $_condition;
- private object $_output;
-
-    /**
-     * Summary of __construct
-     * @param string $IDR
-     * @param string $title
-     * @param string $ruleType
-     * @param object $evaluation
-     * @param string $condition
-     * @param object $output
-     */
-    public function __construct(string $IDR, string $title, string $ruleType, object $evaluation, string $condition, object $output)
+    public function __construct()
     {
-        $this->_IDR = $IDR;
-        $this->_title = $title;
-        $this->_ruleType = $ruleType;
-        $this->_evaluation = $evaluation;
-        $this->_condition = $condition;
-        $this->_output = $output;
+        var_dump(get_class($this));
     }
-   
 
-    /**
-     * Summary of verifyRuleType
-     * @param mixed $typeFunct
-     * @return array<int>|string
-     */
     public static function verifyRuleType($typeFunct)
     {
         $res = array();
@@ -42,17 +15,16 @@ class Rules
         foreach ($typeFunct as $ty) {
             switch ($ty) {
                 case 'logic':
-                    $evaluations = new LogicRules();
+                    $evaluations = RulesFactory::getRule($ty);
                     $res[] = $evaluations->evaluate();
                     break;
-                case 'arithmetic_logic':
-                    $evaluations = new ArithmeticLogicRules();
+                case 'arithmeticLogic':
+                    $evaluations = RulesFactory::getRule($ty);
                     $res[] = $evaluations->evaluate();
                     break;
                 case 'arithmetic':
-                    $evaluations = new ArithmeticRules();
+                    $evaluations = RulesFactory::getRule($ty);
                     $res[] = $evaluations->evaluate();
-                    break;
                 default:
                     return "undef rule";
             }
@@ -60,11 +32,6 @@ class Rules
         return $res;
     }
 
-
-    /**
-     * Summary of doEval
-     * @return array<int>|string
-     */
     public function doEval()
     {
         $ruleTypes = array();

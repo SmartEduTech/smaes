@@ -78,7 +78,7 @@
             ,"R2":{
                 "Id":"calculer_CC"
                 ,"title":"Calcule du controle continu"
-                ,"Rule_Type":"arithmetic_logic"
+                ,"Rule_Type":"arithmeticLogic"
                 ,"Evaluation":{
                     "condition":"input_variables:@regime==mixte"
                     ,"output":{
