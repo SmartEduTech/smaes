@@ -25,6 +25,7 @@ class Rules
                 case 'arithmetic':
                     $evaluations = RulesFactory::getRule($ty);
                     $res[] = $evaluations->evaluate();
+                    break;
                 default:
                     return "undef rule";
             }
@@ -32,6 +33,12 @@ class Rules
         return $res;
     }
 
+    /**
+     * Summary of doEval
+     * This function triggre the evaluation in each rule claimed in the JSON file and return an array of rules results
+     * @return array|string
+     * this fnct should be in evaluation.php file ---to refactor
+     */
     public function doEval()
     {
         $ruleTypes = array();

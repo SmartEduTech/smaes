@@ -8,5 +8,4 @@ class RulesFactory {
         $ns = __NAMESPACE__ . '\\' . $class_name;
          return new $ns;
     }
-
 }
