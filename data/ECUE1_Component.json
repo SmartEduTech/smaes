@@ -5,50 +5,52 @@
     ,"description":"Calcule de moyenne d'elements constitutifs d'unité d'enseignement de Licence et Mastère"
     ,"input_variables":{
         "TP":{
-            "type":"float"
+            "type":"double|integer"
             ,"value":""
         }
         ,"DS":{
-            "type":"float|string"
+            "type":"double|integer|string"
             ,"value":""
             ,"default" : ""
             ,"enum" : "ABS,PR,DIP"
         }
         ,"CC" :{
-            "type":"float"
+            "type":"double|integer"
             ,"value":""
         }
         ,"EXAM":{
-            "type":"float|string"
-            ,"value":""
+            "type":"double|integer|string"
+            ,"value": ""
             ,"enum" : "ABS,PR,DIP"
         }
         ,"Exam_ABS":{
-            "type":false
+            "type": "boolean"
+            ,"default" : true
             ,"value":""
         }
         ,"credit":{
-            "type":"float"
+            "type":"double|integer"
             ,"readonly":true
             ,"value":""
         }
         ,"session":
         {
             "type":"string"
-            ,"value":"principale"
+            ,"value":""
         }
         ,"regime":{
             "type":"string"
-            ,"value":"mixte"
+            ,"default" : "mixte"
+            ,"value":""
         }
     }
     ,"output_variables":{
         "credit":{
-            "type":"float"
+            "type":"double|integer"
             ,"value":""
         }
         ,"average":{
-            "type":"float"
+            "type":"double|integer"
             ,"value":""
         }
     }
@@ -59,7 +61,7 @@
                 ,"title":"Gestion des absences"
                 ,"Rule_Type":"logic"
                 ,"Evaluation":{
-                    "Condition":"input_variables:@EXAM=='ABS'"
+                    "Condition":"'@EXAM'=='ABS'"
                     ,"output":{
                         "true":{
                             "bind":{
@@ -80,11 +82,11 @@
                 ,"title":"Calcule du controle continu"
                 ,"Rule_Type":"arithmeticLogic"
                 ,"Evaluation":{
-                    "condition":"input_variables:@regime==mixte"
+                    "Condition":"'@regime'=='mixte'"
                     ,"output":{
                         "true":{
                             "bind":{
-                                "input_variables:@CC":"input_variables:@TP*0.1+input_variables:@DS*0.3"
+                                "input_variables:@CC":"{Methods::SUM}(@TP*0.1,@DS*0.3)"
                             }
                         }
                     }

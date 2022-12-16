@@ -9,13 +9,15 @@ class Variable{
     public bool $_readonly;
 
     public string $InOut;
-    public function __construct($name,$value,$type="")
+    public function __construct($type="")
     {
-        $this->_name=$name;
         $this->_type=$type;
-        $this->_value=$value;
     }
 
+    public function setType($type)
+    {
+        $this->_type = $type;
+    } 
 
     /**
      * Summary of verifyTypeValue
@@ -32,7 +34,5 @@ class Variable{
             }
         }
         return false;
-      
-     
     }
 }

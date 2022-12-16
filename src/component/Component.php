@@ -1,5 +1,6 @@
 <?php 
 namespace smartedutech\smaes\component;
+use PHPUnit\TextUI\XmlConfiguration\Variable;
 use smartedutech\smaes\component\rules\Rules;
 /**
  * Summary of Component
@@ -9,9 +10,11 @@ use smartedutech\smaes\component\rules\Rules;
 class Component
 {
     private Rules $_rules;
+    private Variable $_variables;
    
-    public function __construct(Rules $rules)
+    public function __construct(Rules $rules, Variable $vars)
     {
         $this->_rules = $rules;
+        $this->_variables = $vars;
     }
 }
