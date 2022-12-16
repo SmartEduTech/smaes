@@ -64,7 +64,6 @@ class Evaluation
         return $allMarkNames;
     }
 
-
     /**
      * Summary of insertArrayIntoJSON
      * This function get inputMark from user, markNames from the jsonFile and add each input in the right mark value
@@ -136,8 +135,8 @@ class Evaluation
                                 $tmp = $test ? "etudiant ABS" : $data->input_variables->EXAM->value;
                                 $res[] = $tmp;
                                 break;
-                            case "regime":
-                                $tmp = $test ? "regime mixte right" : $data->input_variables->regime->value;
+                            case "REGIME":
+                                $tmp = $test ? "regime is mixte" : $data->input_variables->REGIME->value;
                                 $res[] = $tmp;
                                 break;
                         }
@@ -151,4 +150,20 @@ class Evaluation
         return $res;
     }
 
+
+      /**
+       * Summary of getOutputsFromJSON
+       * This function returns array of names' marks and their values from the JSON file
+       * @param string $file
+       * @return array<array>
+       */
+    public function getOutputsFromJSON(string $file)
+    {
+        $data = json_decode(file_get_contents($file));
+        foreach ($data->input_variables as $mnKey => $mnVal) {
+            $allMarkNames[] = ["$mnKey" => $mnVal->value];
+
+        }
+        return $allMarkNames;
+    }
 }

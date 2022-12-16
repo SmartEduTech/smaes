@@ -28,17 +28,17 @@
             ,"default" : true
             ,"value":""
         }
-        ,"credit":{
+        ,"CREDIT":{
             "type":"double|integer"
             ,"readonly":true
             ,"value":""
         }
-        ,"session":
+        ,"SESSION":
         {
             "type":"string"
             ,"value":""
         }
-        ,"regime":{
+        ,"REGIME":{
             "type":"string"
             ,"default" : "mixte"
             ,"value":""
@@ -82,7 +82,7 @@
                 ,"title":"Calcule du controle continu"
                 ,"Rule_Type":"arithmeticLogic"
                 ,"Evaluation":{
-                    "Condition":"'@regime'=='mixte'"
+                    "Condition":"'@REGIME'=='mixte'"
                     ,"output":{
                         "true":{
                             "bind":{

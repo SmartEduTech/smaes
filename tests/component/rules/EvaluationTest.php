@@ -10,7 +10,7 @@ class EvaluationTest extends TestCase
     {
         $file = "C:\\Users\\Lenovo\\Documents\\GitHub\\smaesLibraryTest\\vendor\\smartedutech\\smaes\\data\\ECUE1_Component.json";
 
-        $desired_response = array('logic' => array("result" => 2, "condition" => "'@EXAM'=='ABS'"), 'arithmeticLogic' => array("result" => 4, "condition" => "'@regime'=='mixte'"));
+        $desired_response = array('logic' => array("result" => 2, "condition" => "'@EXAM'=='ABS'"), 'arithmeticLogic' => array("result" => 4, "condition" => "'@REGIME'=='mixte'"));
 
         $classUnderTest = new Evaluation();
 
@@ -24,7 +24,7 @@ class EvaluationTest extends TestCase
     {
         $file = "C:\\Users\\Lenovo\\Documents\\GitHub\\smaesLibraryTest\\vendor\\smartedutech\\smaes\\data\\ECUE1_Component.json";
 
-        $desired_response = array(0 => 'TP', 1 => 'DS', 2 => 'CC', 3 => 'EXAM', 4 => 'Exam_ABS', 5 => 'credit', 6 => 'session', 7 => 'regime');
+        $desired_response = array(0 => 'TP', 1 => 'DS', 2 => 'CC', 3 => 'EXAM', 4 => 'Exam_ABS', 5 => 'CREDIT', 6 => 'SESSION', 7 => 'REGIME');
 
         $classUnderTest = new Evaluation();
 

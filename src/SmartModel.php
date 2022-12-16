@@ -17,20 +17,37 @@ class SmartModel
      * @param string $file
      * @return array
      */
-    public function evaluate(mixed $inputMark, string $file)
+    public function evaluate(mixed $inputMark, string $JSON_file)
     {
         $e = new Evaluation();
-        $allMarkNames = $e->getMarksNames($file);
-
-        $e->insertArrayIntoJSON($inputMark, $allMarkNames, $file);
-        return $e->evalConditionsFromJSON($file);
+        $allMarkNames = $e->getMarksNames($JSON_file);
+        $e->insertArrayIntoJSON($inputMark, $allMarkNames, $JSON_file);
+        return $e->evalConditionsFromJSON($JSON_file);
 
     }
+
+    /**
+     * Summary of findPropertyComponent
+     * search inserted propertyName in the JSON file and returns propertyName's value after evaluation
+     * @param string $JSON_file
+     * @param string $propertyName
+     * @return string|null
+     */
     public function findPropertyComponent(string $JSON_file, string $propertyName)
     {
-        //prend en param le fichier JSON de la composante ainsi que le nom de la propriété cherché dans cette composante
-        //et retourne la valeur la propriété passé en param (apres traitement et non pas la valeur initiale)
-        return "$propertyName = propertyValue after evaluation ";
+        $e = new Evaluation();
+        $output = null;
+        $registredData = $e->getOutputsFromJSON($JSON_file);
+        $formatedPropertyName = strtoupper($propertyName);
+        foreach ($registredData as $mark) {
+
+            foreach ($mark as $key => $value) {
+                if ($key === $formatedPropertyName) {
+                    $output = "$formatedPropertyName = $value";
+                }
+            }
+        }
+        return (!empty($output)) ? $output : "$formatedPropertyName does not exist please try again";
     }
 
     public function getResults()
