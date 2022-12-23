@@ -1,105 +1,104 @@
 {
-    "title":"évaluation ECUE"
-    ,"name" : "ECUE"
-    ,"ID":"1"
-    ,"description":"Calcule de moyenne d'elements constitutifs d'unité d'enseignement de Licence et Mastère"
-    ,"input_variables":{
-        "TP":{
-            "type":"double|integer"
-            ,"value":""
+    "title": "évaluation ECUE",
+    "name": "ECUE",
+    "ID": "1",
+    "description": "Calcule de moyenne d'elements constitutifs d'unité d'enseignement de Licence et Mastère",
+    "input_variables": {
+        "TP": {
+            "type": "double|integer",
+            "value": ""
+        },
+        "DS": {
+            "type": "double|integer|string",
+            "value": "",
+            "default": "",
+            "enum": "ABS,PR,DIP"
+        },
+        "CC": {
+            "type": "double|integer",
+            "value": ""
+        },
+        "EXAM": {
+            "type": "double|integer|string",
+            "value": "",
+            "enum": "ABS,PR,DIP"
+        },
+        "EXAM_ABS": {
+            "type": "boolean",
+            "default": false,
+            "value": ""
+        },
+        "CREDIT": {
+            "type": "double|integer",
+            "readonly": true,
+            "value": ""
+        },
+        "SESSION": {
+            "type": "string",
+            "value": ""
+        },
+        "REGIME": {
+            "type": "string",
+            "default": "mixte",
+            "value": ""
         }
-        ,"DS":{
-            "type":"double|integer|string"
-            ,"value":""
-            ,"default" : ""
-            ,"enum" : "ABS,PR,DIP"
+    },
+    "output_variables": {
+        "credit": {
+            "type": "double|integer",
+            "value": ""
+        },
+        "average": {
+            "type": "double|integer",
+            "value": ""
         }
-        ,"CC" :{
-            "type":"double|integer"
-            ,"value":""
-        }
-        ,"EXAM":{
-            "type":"double|integer|string"
-            ,"value": ""
-            ,"enum" : "ABS,PR,DIP"
-        }
-        ,"Exam_ABS":{
-            "type": "boolean"
-            ,"default" : true
-            ,"value":""
-        }
-        ,"CREDIT":{
-            "type":"double|integer"
-            ,"readonly":true
-            ,"value":""
-        }
-        ,"SESSION":
-        {
-            "type":"string"
-            ,"value":""
-        }
-        ,"REGIME":{
-            "type":"string"
-            ,"default" : "mixte"
-            ,"value":""
-        }
-    }
-    ,"output_variables":{
-        "credit":{
-            "type":"double|integer"
-            ,"value":""
-        }
-        ,"average":{
-            "type":"double|integer"
-            ,"value":""
-        }
-    }
-    ,"Rules":{
-        "calculate_average":{
-            "R1":{
-                "Id":"Absence"
-                ,"title":"Gestion des absences"
-                ,"Rule_Type":"logic"
-                ,"Evaluation":{
-                    "Condition":"'@EXAM'=='ABS'"
-                    ,"output":{
-                        "true":{
-                            "bind":{
-                                "input_variables:@Exam_ABS":"true"
-                                ,"input_variables:@EXAM":0
+    },
+    "Rules": {
+        "calculate_average": {
+            "R1": {
+                "Id": "Absence",
+                "title": "Gestion des absences",
+                "Rule_Type": "logic",
+                "Evaluation": {
+                    "Condition": "'@EXAM'=='ABS'",
+                    "output": {
+                        "true": {
+                            "bind": {
+                                "@EXAM_ABS": "true",
+                                "@EXAM": 0
+                            }
+                        },
+                        "false": {
+                            "bind": {
+                                "@EXAM_ABS": "false"
                             }
                         }
-                        ,"false":{
-                            "bind":{
-                                "input_variables:@Exam_ABS":"false"
+                    }
+                }
+            },
+            "R2": {
+                "Id": "calculer_CC",
+                "title": "Calcule du controle continu",
+                "Rule_Type": "arithmeticLogic",
+                "Evaluation": {
+                    "Condition": "'@REGIME'=='mixte'",
+                    "output": {
+                        "true": {
+                            "bind": {
+                                "@CC": "{Methods::SUM}(@TP*0.1,@DS*0.3)"
                             }
                         }
                     }
                 }
             }
-            ,"R2":{
-                "Id":"calculer_CC"
-                ,"title":"Calcule du controle continu"
-                ,"Rule_Type":"arithmeticLogic"
-                ,"Evaluation":{
-                    "Condition":"'@REGIME'=='mixte'"
-                    ,"output":{
-                        "true":{
-                            "bind":{
-                                "input_variables:@CC":"{Methods::SUM}(@TP*0.1,@DS*0.3)"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        ,"calculate_credits":{
-            "R1":{
-                "Id":""
-                ,"title":""
-                ,"Rule_Type":""
-                ,"Evaluation":{
-                    "Condition":""
+        },
+        "calculate_credits": {
+            "R1": {
+                "Id": "",
+                "title": "",
+                "Rule_Type": "",
+                "Evaluation": {
+                    "Condition": ""
                 }
             }
         }

@@ -11,19 +11,30 @@ class SmartModel
     }
 
     /**
-     * Summary of evaluate
-     * This function get input marks from the user, insert them into the JSON file then triggre the evaluation
+     * Summary of InputIntoModel
+     * This function get input marks from the user, insert them into the JSON file
      * @param mixed $inputMark
      * @param string $file
      * @return array
      */
-    public function evaluate(mixed $inputMark, string $JSON_file)
+    public function InputIntoModel(mixed $inputMark, string $JSON_file)
     {
         $e = new Evaluation();
         $allMarkNames = $e->getMarksNames($JSON_file);
-        $e->insertArrayIntoJSON($inputMark, $allMarkNames, $JSON_file);
-        return $e->evalConditionsFromJSON($JSON_file);
+        return  $e->insertArrayIntoJSON($inputMark, $allMarkNames, $JSON_file);
 
+    }
+    /**
+     * Summary of evaluate
+     * This function get evaluation conditions, then triggre the evaluation and refactor each variable after condition verification
+     * @param mixed $inputMark
+     * @param string $file
+     * @return array
+     */
+    public function evaluate(string $JSON_file)
+    {
+        $e = new Evaluation();
+        return $e->evalConditionsFromJSON($JSON_file);
     }
 
     /**
@@ -37,7 +48,7 @@ class SmartModel
     {
         $e = new Evaluation();
         $output = null;
-        $registredData = $e->getOutputsFromJSON($JSON_file);
+        $registredData = $e->getInputsVariablesValuesFromJSON($JSON_file);
         $formatedPropertyName = strtoupper($propertyName);
         foreach ($registredData as $mark) {
 

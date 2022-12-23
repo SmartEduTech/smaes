@@ -6,49 +6,132 @@ use smartedutech\smaes\component\variables\Variable;
 
 class Evaluation
 {
-    private string $_condition;
-    private string $_output;
+   private  string $_condition;
+    private bool $_output;
     public function __construct()
-    {}
+    {
+    }
 
     /**
      * Summary of doEval
-     * This function get a JSON file as a @param string $file extract from it Rules and conditions
+     *This function get a JSON file as a @param string $file extract from it Rules and conditions
      * and @return array<array> (exp : [RuleType] => ( [result] => rule result , [condition] => rule condition))
+     * @param string $file
+     * @return array<array>|null
      */
     public function doEval(string $file)
     {
-        $ruleTypes = array();
-        $conditions = array();
+        $obj = array();
+        $binds = array();
         $data = json_decode(file_get_contents($file));
         $rules = $data->Rules;
         foreach ($rules as $key => $value) {
             foreach ($value as $propKey => $propValue) {
                 if ($propValue->Rule_Type != null) {
-                    $r = RulesFactory::getRule($propValue->Rule_Type)->evaluate();
-                    $ruleTypes[] = ["type" => $propValue->Rule_Type, "result" => $r];
+                    $rule = RulesFactory::getRule($propValue->Rule_Type);
+                    $result = $rule->evaluate();
+                    $title = $propValue->title;
+                    $type = $propValue->Rule_Type;
                     foreach ($propValue as $pk => $pv) {
                         if (!empty($pv) && is_object($pv)) {
                             foreach ($pv as $k => $v) {
                                 if ($k === 'Condition' && $v != null) {
-                                    $this->_condition = $v;
-                                    $conditions[] = ["type" => $propValue->Rule_Type, "condition" => $this->_condition];
-                                    $obj = array();
-                                    for ($i = 0; $i < count($ruleTypes); $i++) {
-                                        if ($ruleTypes[$i]["type"] === $conditions[$i]["type"]) {
-                                            $obj[$ruleTypes[$i]["type"]] = ["result" => $ruleTypes[$i]["result"], "condition" => $conditions[$i]["condition"]];
+                                    $condition = $v;
+                                }
+                                if ($k === 'output' && $v != null) {
+                                    $output = $v;
+
+                                    foreach ($output as $outKey => $outVal) {
+
+                                        $obj[] = ["title" => $title, "type" => $type, "result" => $result, "condition" => $condition, "output" => $outKey, "binds" => []];
+
+                                        foreach ($outVal as $bind) {
+                                            foreach ($bind as $varName => $newData) {
+                                                $binds[] = ["title" => $title, "output" => $outKey, "bind" => ["varNameToRefac" => $varName, "newData" => $newData]];
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+
                     }
                 }
             }
         }
-        return $obj;
+
+        $res = $this->getRuleBinds($binds);
+        $result = [];
+        foreach ($obj as $element => $value) {
+            $title = $value["title"];
+            $output = $value["output"];
+            $key = "$title - $output";
+            foreach ($res as $elementres => $valueres) {
+                if ($elementres === $key) {
+                    $value["binds"][] = $valueres;
+                    $result[] = $value;
+                }
+            }
+        }
+
+        return $this->getOutputBinds($result);
+
     }
 
+    /**
+     * Summary of getOutputBinds
+     * this function insert binds of the same rule in the same array :
+     * [0=>binds for the test condition = true , and false => for test condition = false]
+     * @param mixed $result
+     * @return array
+     */
+    public function getOutputBinds($result)
+    {
+
+        for ($i = 0; $i < count($result); $i++) {
+            if (!empty($result[$i + 1]) && $result[$i]["title"] === $result[$i + 1]["title"] && is_array($result[$i])) {
+                $result[$i]["binds"] = [$result[$i]["output"] => $result[$i]["binds"], $result[$i + 1]["output"] => $result[$i + 1]["binds"]];
+                unset($result[$i]["output"], $result[$i + 1]);
+                $result = array_values($result); //réindexe le tableau pour éviter les trous dans les indices
+            } else if (!empty($result[$i + 1]) && $result[$i]["title"] != $result[$i + 1]["title"] && is_array($result[$i + 1])) {
+                $result[$i]["binds"] = [$result[$i]["output"] => $result[$i]["binds"]];
+                unset($result[$i]["output"]);
+                $result = array_values($result);
+            } else if (!isset($result[$i + 1]) && $result[$i]["title"] != $result[$i - 1]["title"] && is_array($result[$i - 1])) {
+                $result[$i]["binds"] = [$result[$i]["output"] => $result[$i]["binds"]];
+                unset($result[$i]["output"]);
+                $result = array_values($result);
+            }
+        }
+        return $result;
+
+    }
+
+    /**
+     * Summary of getRuleBinds
+     * this function return [ruleName - outputCondition] = [binds to do]
+     * @param mixed $binds
+     * @return array
+     */
+    public function getRuleBinds($binds)
+    {
+        $combinedBinds = array();
+
+        for ($i = 0; $i < count($binds); $i++) {
+            $title = $binds[$i]["title"];
+            $output = $binds[$i]["output"];
+            $key = "$title - $output";
+            $bind = $binds[$i]["bind"];
+
+            if (isset($binds[$i + 1]) && !empty($binds[$i + 1]["title"]) && $title === $binds[$i + 1]["title"] && $output === $binds[$i + 1]["output"]) {
+                $combinedBinds[$key][] = array_diff($bind, $binds[$i + 1]["bind"]);
+            } else {
+                $combinedBinds[$key][] = $bind;
+            }
+        }
+
+        return $combinedBinds;
+    }
     /**
      * Summary of getMarksNames
      * function returns array of input_variables names from the JSON file
@@ -78,86 +161,27 @@ class Evaluation
         $res = [];
         $data = json_decode(file_get_contents($file));
 
-        foreach ($mrkn as $mk => $mv) {
+        foreach ($mrkn as $mk => $mv) { 
             $var = new Variable($data->input_variables->$mv->type);
             if ($var->verifyTypeValue($inputMark[$mk])) {
                 $data->input_variables->$mv->value = $inputMark[$mk];
                 file_put_contents($file, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-                $res[] = "done tableau";
+                $res[] = "done mark $mv added successfully";
             } else {
-                $res[] = "oops tableau";
+                $res[] = "oops $mv can not be added please check your input type";
             }
 
         }
         return $res;
-    }
 
+    }
     /**
-     * Summary of getConditions
-     * fuction gets conditions from JSON file
+     * Summary of getInputsVariablesValuesFromJSON
+     * This function returns array of names' marks and their values from the JSON file
      * @param string $file
-     * @return array<string>
+     * @return array<array>
      */
-    public function getConditions(string $file)
-    {
-        $conditions = [];
-        $rules = $this->doEval($file);
-        foreach ($rules as $rule) {
-            $this->_condition = $rule["condition"];
-            $conditions[] = $this->_condition;
-        }return $conditions;
-    }
-
-    /**
-     * Summary of evalConditionsFromJSON
-     * this functions treat all rule conditions from the JSON file
-     * @param string $file
-     * @return array
-     */
-    public function evalConditionsFromJSON(string $file)
-    {
-        $conditions = [];
-        $data = json_decode(file_get_contents($file));
-        $rules = $this->doEval($file);
-        foreach ($rules as $rule) {
-            $this->_condition = $rule["condition"];
-            $conditions[] = $this->_condition;
-            $res = [];
-            foreach ($conditions as $condition) {
-                $allMarkNames = $this->getMarksNames($file);
-                foreach ($allMarkNames as $markName) {
-                    if (str_contains($condition, $markName)) {
-                        $dataExist = $data->input_variables->$markName->value;
-                        $specificCondition = str_ireplace("@$markName", "$dataExist", $condition);
-                        $test = eval("return $specificCondition;");
-                        switch ($markName) {
-                            case "EXAM":
-                                $tmp = $test ? "etudiant ABS" : $data->input_variables->EXAM->value;
-                                $res[] = $tmp;
-                                break;
-                            case "REGIME":
-                                $tmp = $test ? "regime is mixte" : $data->input_variables->REGIME->value;
-                                $res[] = $tmp;
-                                break;
-                        }
-                    }
-
-                }
-
-            }
-
-        }
-        return $res;
-    }
-
-
-      /**
-       * Summary of getOutputsFromJSON
-       * This function returns array of names' marks and their values from the JSON file
-       * @param string $file
-       * @return array<array>
-       */
-    public function getOutputsFromJSON(string $file)
+    public function getInputsVariablesValuesFromJSON(string $file)
     {
         $data = json_decode(file_get_contents($file));
         foreach ($data->input_variables as $mnKey => $mnVal) {
@@ -166,4 +190,72 @@ class Evaluation
         }
         return $allMarkNames;
     }
+    /**
+     * Summary of getTestConditions
+     * this function returns an array of eval conditions
+     * @param mixed $conditions
+     * @param mixed $data
+     * @param mixed $file
+     * @return array<string>
+     */
+    public function getTestConditions($condition, $data, string $file)
+    {
+        $res = [];
+
+        $allMarkNames = $this->getMarksNames($file);
+        foreach ($allMarkNames as $markName) {
+            if (str_contains($condition, $markName)) {
+                $dataExist = $data->input_variables->$markName->value;
+                $specificCondition = str_ireplace("@$markName", "$dataExist", $condition);
+                $test = eval("return $specificCondition;");
+                $converted_test = $test ? 'true' : 'false';
+                $res[$condition] = $converted_test;
+            }
+        }
+
+        return $res;
+    }
+    /**
+     * Summary of evalConditionsFromJSON
+     * this functions treat all rule conditions from the JSON file
+     * @param string $file
+     * @return array|null|string
+     */
+    public function evalConditionsFromJSON(string $file)
+    {
+        $mrkn = [];
+        $inputs = [];
+        $dataArray = $this->doEval($file);
+        $data = json_decode(file_get_contents($file));
+        foreach ($dataArray as $rule) {
+            $this->_condition = $rule["condition"]; // $rule["condition"] condition dans le fichier => doeval tab final
+            $res = $this->getTestConditions($this->_condition, $data, $file); //resultat de la condition
+            foreach ($res as $r => $rv) { //$r = condtion $rv = result de condition
+                if ($r === $this->_condition) {
+                    foreach ($rule["binds"] as $bindkey => $bindValue) {
+                        if ($bindkey === $rv) {
+                            foreach ($bindValue as $value) {
+                                foreach ($value as $v) {
+
+                                    $pos = strpos($v["varNameToRefac"], '@');
+                                    if ($pos !== false) {
+                                        $v["varNameToRefac"] = substr_replace($v["varNameToRefac"], '', $pos, 1);
+                                    }
+                                    $convertedMarkValueInput = $v["newData"] === "false" ? false : ($v["newData"] === "true" ? true : $v["newData"]);
+                                    $mrkn[] = $v["varNameToRefac"];
+                                    $inputs[] = $convertedMarkValueInput;
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->insertArrayIntoJSON($inputs, $mrkn, $file);
+    }
+
+   
 }

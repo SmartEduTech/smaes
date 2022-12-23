@@ -24,12 +24,12 @@ class Variable{
      * This function checks the type of the introduced variable by its type indicated in the json file
      * @param mixed $value
      * @return bool
-     */
+     */ 
     public function verifyTypeValue($value=""){
-        $tmpvalue=!empty($value) ? $value : $this->_value;
+      //  $tmpvalue=!empty($value) ? $value : $this->_value;
         $All_type=explode("|",$this->_type);
         foreach($All_type as $ty){
-            if(gettype($tmpvalue)==$ty){
+            if(gettype($value)==$ty){//replaced $tmpvalue with $value 
                 return true;
             }
         }
