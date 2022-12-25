@@ -85,7 +85,7 @@
                     "output": {
                         "true": {
                             "bind": {
-                                "@CC": "{Methods::SUM}(@TP*0.1,@DS*0.3)"
+                                "@CC": "Methods::{'SUM'}(@TP*0.1,@DS*0.3)"
                             }
                         }
                     }

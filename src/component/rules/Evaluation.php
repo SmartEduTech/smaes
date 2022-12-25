@@ -6,7 +6,7 @@ use smartedutech\smaes\component\variables\Variable;
 
 class Evaluation
 {
-   private  string $_condition;
+    private string $_condition;
     private bool $_output;
     public function __construct()
     {
@@ -161,7 +161,7 @@ class Evaluation
         $res = [];
         $data = json_decode(file_get_contents($file));
 
-        foreach ($mrkn as $mk => $mv) { 
+        foreach ($mrkn as $mk => $mv) {
             $var = new Variable($data->input_variables->$mv->type);
             if ($var->verifyTypeValue($inputMark[$mk])) {
                 $data->input_variables->$mv->value = $inputMark[$mk];
@@ -241,8 +241,19 @@ class Evaluation
                                     if ($pos !== false) {
                                         $v["varNameToRefac"] = substr_replace($v["varNameToRefac"], '', $pos, 1);
                                     }
-                                    $convertedMarkValueInput = $v["newData"] === "false" ? false : ($v["newData"] === "true" ? true : $v["newData"]);
+                                    //check if string has {} so its a method to triggre
+                                    $check = (strpos($v["newData"], '{') !== false || strpos($v["newData"], '}') !== false) ? true : false;
+                                    //call us of the method
+                                    $use = "use smartedutech\\smaes\\methods\\Methods;";
+                                    //replace @Vars with their values from json file
+                                    $ifFunction = $this->replaceFunctionVars($v["newData"], $file);
+                                    //if string has {} so we will evaluate a method / else we will return the normal value
+                                    $resF = $check ? eval("$use; return $ifFunction;") : $v["newData"];
+                                    //we're getting bool values as strings so we return it with their real type
+                                    $convertedMarkValueInput = $v["newData"] === "false" ? false : ($v["newData"] === "true" ? true : $resF);
+                                    //mrkn[] is an array with the inputvariables to change in the json file
                                     $mrkn[] = $v["varNameToRefac"];
+                                    //inputs is an array with the value of each new inputvariables for the json file
                                     $inputs[] = $convertedMarkValueInput;
 
                                 }
@@ -257,5 +268,35 @@ class Evaluation
         return $this->insertArrayIntoJSON($inputs, $mrkn, $file);
     }
 
-   
+    /**
+     * Summary of replaceFunctionVars
+     * this function get the method in the json ex : method::sum(@tp,@ds) and replace @tp and @ds with their values
+     * from the json
+     * and returns method::sum(valueTP,valueDS)
+     * @param string $data
+     * @param string $file
+     * @return array|string
+     */
+    public function replaceFunctionVars(string $data, string $file)
+    {
+        $variables = [];
+        $datajson = json_decode(file_get_contents($file));
+
+        // extract the variables from the string using a regular expression
+        preg_match_all('/@([A-Za-z]+)/', $data, $matches);
+
+        // add the variables to the array
+        foreach ($matches[1] as $variable) {
+            $variables[] = $variable;
+        }
+
+        // replace the variables in the string with "FOUND"
+        foreach ($variables as $var) {
+            $data = str_replace("@$var", $datajson->input_variables->$var->value, $data);
+        }
+
+        // return the modified string
+        return $data;
+    }
+
 }
