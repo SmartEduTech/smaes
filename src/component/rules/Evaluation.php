@@ -161,20 +161,22 @@ class Evaluation
         $res = [];
         $data = json_decode(file_get_contents($file));
 
-        foreach ($mrkn as $mk => $mv) {
-            $var = new Variable($data->input_variables->$mv->type);
-            if ($var->verifyTypeValue($inputMark[$mk])) {
-                $data->input_variables->$mv->value = $inputMark[$mk];
-                file_put_contents($file, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-                $res[] = "done mark $mv added successfully";
-            } else {
-                $res[] = "oops $mv can not be added please check your input type";
+        foreach ($mrkn as $i => $mv) {
+            if (array_key_exists($mv, $inputMark)) {
+                $mk = $mv;
+                $var = new Variable($data->input_variables->$mv->type);
+                if ($var->verifyTypeValue($inputMark[$mk])) {
+                    $data->input_variables->$mv->value = $inputMark[$mk];
+                    file_put_contents($file, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+                    $res[] = "done mark $mv added successfully";
+                } else {
+                    $res[] = "oops $mv can not be added please check your input type";
+                }
             }
-
         }
         return $res;
-
     }
+
     /**
      * Summary of getInputsVariablesValuesFromJSON
      * This function returns array of names' marks and their values from the JSON file
@@ -236,7 +238,6 @@ class Evaluation
                         if ($bindkey === $rv) {
                             foreach ($bindValue as $value) {
                                 foreach ($value as $v) {
-
                                     $pos = strpos($v["varNameToRefac"], '@');
                                     if ($pos !== false) {
                                         $v["varNameToRefac"] = substr_replace($v["varNameToRefac"], '', $pos, 1);
@@ -255,9 +256,7 @@ class Evaluation
                                     $mrkn[] = $v["varNameToRefac"];
                                     //inputs is an array with the value of each new inputvariables for the json file
                                     $inputs[] = $convertedMarkValueInput;
-
                                 }
-
                             }
                         }
                     }
@@ -265,7 +264,9 @@ class Evaluation
             }
         }
 
-        return $this->insertArrayIntoJSON($inputs, $mrkn, $file);
+        // Créez un tableau associatif à partir des tableaux $mrkn et $inputs
+        $inputMark = array_combine($mrkn, $inputs);
+        return $this->insertArrayIntoJSON($inputMark, $mrkn, $file);
     }
 
     /**
