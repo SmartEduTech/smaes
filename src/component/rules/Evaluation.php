@@ -263,8 +263,7 @@ class Evaluation
                 }
             }
         }
-
-        // Créez un tableau associatif à partir des tableaux $mrkn et $inputs
+        // Create an associative array from $mrkn and $inputs arrays
         $inputMark = array_combine($mrkn, $inputs);
         return $this->insertArrayIntoJSON($inputMark, $mrkn, $file);
     }
