@@ -18,15 +18,11 @@ class ItemRule{
         $this->set_Title($info->title);
         $this->set_RuleType($info->Rule_Type);
       if(isset($info->Evaluation->output)){
-        //ici a utiliser le RuleFactory selon le rule type RuleFactory::
-        // $rule = RulesFactory::getRule($this->get_RuleType());
-        //$result = $rule->evaluate();
         $this->_Evaluation =  new EvaluationConditionAndOutput($info->Evaluation->Condition, $info->Evaluation->output);
       }else if(!isset($info->Evaluation->output)){
         $this->_Evaluation =  new EvaluationConditionAndOutput($info->Evaluation->Condition, null);
 
       }
-      //$this->_Evaluation = new Evaluator($info->Evaluation);
       
     }
 

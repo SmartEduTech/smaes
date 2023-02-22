@@ -13,7 +13,6 @@ class Rules
     public function __construct(string $name, $RulesInfor)
     {
         $this->set_Name($name);
-        // echo "<pre>";print_r($RulesInfor);echo "</pre>";die();
         foreach($RulesInfor as $key=>$value){
         $this->_Items[$key] = new ItemRule($key, $value);
         }
@@ -21,11 +20,6 @@ class Rules
         
        
     }
-
-   /* public function __construct(string $type)
-    {
-        $this->_type = $type;
-    }*/
     public function getIDR()
     {
         return $this->_IDR;

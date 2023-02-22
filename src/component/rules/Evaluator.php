@@ -208,8 +208,7 @@ public function evaluer()
 
     $inputMark = array_combine($mrkn, $inputs);
     $this->RefactorVarsValues($variables, $inputMark);
-    //$this->getNameVarWithData($variables) ;
-    print_r($this->getNameVarWithData($variables)) ;
+    return $this->getNameVarWithData($variables);
 }
 
 
@@ -238,6 +237,3 @@ public function evaluer()
         return $this;
     }
  }
-
- //"@CC": "Methods::{'SUM'}((Methods::{'MAX'}({subcomps:@TP*0.2})),(Methods::{'MAX'}({subcomps:@DS*0.3})))"
-//  SOM({subcomps:@CC0}.1+DS*0.2+EX*0.7)
