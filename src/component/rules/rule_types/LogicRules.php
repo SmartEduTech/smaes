@@ -8,4 +8,5 @@ class LogicRules extends Rules implements iRules
     {
         return 2;
     }
+    
 }

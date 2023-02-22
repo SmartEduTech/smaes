@@ -1,106 +1,320 @@
 {
-    "title": "évaluation ECUE",
-    "name": "ECUE",
-    "ID": "1",
-    "description": "Calcule de moyenne d'elements constitutifs d'unité d'enseignement de Licence et Mastère",
-    "input_variables": {
+  "title": "évaluation ECUE",
+  "name": "ECUE",
+  "ID": "1",
+  "description": "Calcule de moyenne d'elements constitutifs d'unité d'enseignement de Licence et Mastère",
+  "input_variables": {
+    "TP": {
+      "type": "double|integer",
+      "value": 17
+    },
+    "DS": {
+      "type": "double|integer|string",
+      "value": 7,
+      "default": "",
+      "enum": "ABS:Absence;PR:Prolongation;DIP:Disponsé,toules etudiant qui ont déjà aqui ce module"
+    },
+    "CC": {
+      "type": "double|integer",
+      "value": ""
+    },
+    "EXAM": {
+      "type": "double|integer|string",
+      "value": "ABS",
+      "enum": "ABS,PR,DIP"
+    },
+    "EXAM_ABS": {
+      "type": "boolean",
+      "default": false,
+      "value": ""
+    },
+    "CREDIT": {
+      "type": "double|integer",
+      "readonly": true,
+      "value": 25
+    },
+    "SESSION": {
+      "type": "string",
+      "value": "principale"
+    },
+    "REGIME": {
+      "type": "string",
+      "default": "mixte",
+      "value": "mixte"
+    }
+  },
+  "output_variables": {
+    "credit": {
+      "type": "double|integer",
+      "value": ""
+    },
+    "average": {
+      "type": "double|integer",
+      "value": ""
+    }
+  },
+  "Rules": {
+    "calculate_average": {
+      "R1": {
+        "Id": "Absence",
+        "title": "Gestion des absences",
+        "Rule_Type": "logic",
+        "Evaluation": {
+          "Condition": "'@EXAM'=='ABS'",
+          "output": {
+            "true": {
+              "bind": {
+                "@EXAM_ABS": "true",
+                "@EXAM": 0
+              }
+            },
+            "false": {
+              "bind": {
+                "@EXAM_ABS": "false"
+              }
+            }
+          }
+        }
+      },
+      "R2": {
+        "Id": "calculer_CC",
+        "title": "Calcule du controle continu",
+        "Rule_Type": "arithmeticLogic",
+        "Evaluation": {
+          "Condition": "'@REGIME'=='mixte'",
+          "output": {
+            "true": {
+              "bind": {
+                "@CC": "Methods::{'SUM'}((Methods::{'MAX'}({subcomps:@TP*0.2})),(Methods::{'MAX'}({subcomps:@DS*0.3})))"
+              }
+            }
+          }
+        }
+      }
+    },
+    "calculate_credits": {
+      "R1": {
+        "Id": "",
+        "title": "",
+        "Rule_Type": "",
+        "Evaluation": {
+          "Condition": ""
+        }
+      }
+    }
+  },
+  "subcomps": [
+    {
+      "title": "sub1",
+      "name": "sub1",
+      "ID": "1",
+      "description": "sub1nce et Mastère",
+      "input_variables": {
         "TP": {
-            "type": "double|integer",
-            "value": ""
+          "type": "double|integer",
+          "value": 12
         },
         "DS": {
-            "type": "double|integer|string",
-            "value": "",
-            "default": "",
-            "enum": "ABS,PR,DIP"
+          "type": "double|integer|string",
+          "value": 19,
+          "default": "",
+          "enum": "ABS,PR,DIP"
         },
         "CC": {
-            "type": "double|integer",
-            "value": ""
+          "type": "double|integer",
+          "value": ""
         },
-        "EXAM": {
-            "type": "double|integer|string",
-            "value": "",
-            "enum": "ABS,PR,DIP"
+        "EXAMSUBONE": {
+          "type": "double|integer|string",
+          "value": "ABS",
+          "enum": "ABS,PR,DIP"
         },
-        "EXAM_ABS": {
-            "type": "boolean",
-            "default": false,
-            "value": ""
+        "EXAMSUBONE_ABS": {
+          "type": "boolean",
+          "default": false,
+          "value": true
         },
-        "CREDIT": {
-            "type": "double|integer",
-            "readonly": true,
-            "value": ""
+        "CREDITSUBONE": {
+          "type": "double|integer",
+          "readonly": true,
+          "value": ""
         },
-        "SESSION": {
-            "type": "string",
-            "value": ""
+        "SESSIONSUBONE": {
+          "type": "string",
+          "value": ""
         },
-        "REGIME": {
-            "type": "string",
-            "default": "mixte",
-            "value": ""
+        "REGIMESUBONE": {
+          "type": "string",
+          "default": "mixte",
+          "value": "mixte"
         }
-    },
-    "output_variables": {
+      },
+      "output_variables": {
         "credit": {
-            "type": "double|integer",
-            "value": ""
+          "type": "double|integer",
+          "value": ""
         },
         "average": {
-            "type": "double|integer",
-            "value": ""
+          "type": "double|integer",
+          "value": ""
         }
-    },
-    "Rules": {
-        "calculate_average": {
-            "R1": {
-                "Id": "Absence",
-                "title": "Gestion des absences",
-                "Rule_Type": "logic",
-                "Evaluation": {
-                    "Condition": "'@EXAM'=='ABS'",
-                    "output": {
-                        "true": {
-                            "bind": {
-                                "@EXAM_ABS": "true",
-                                "@EXAM": 0
-                            }
-                        },
-                        "false": {
-                            "bind": {
-                                "@EXAM_ABS": "false"
-                            }
-                        }
-                    }
+      },
+      "Rules": {
+        "SUBONEcalcul": {
+          "R1": {
+            "Id": "SUBONEcalculR1",
+            "title": "SUBONEcalculR1",
+            "Rule_Type": "logic",
+            "Evaluation": {
+              "Condition": "'@EXAMSUBONE'=='ABS'",
+              "output": {
+                "true": {
+                  "bind": {
+                    "@EXAMSUBONE_ABS": "true",
+                    "@EXAMSUBONE": 0
+                  }
+                },
+                "false": {
+                  "bind": {
+                    "@EXAMSUBONE_ABS": "false"
+                  }
                 }
-            },
-            "R2": {
-                "Id": "calculer_CC",
-                "title": "Calcule du controle continu",
-                "Rule_Type": "arithmeticLogic",
-                "Evaluation": {
-                    "Condition": "'@REGIME'=='mixte'",
-                    "output": {
-                        "true": {
-                            "bind": {
-                                "@CC": "Methods::{'SUM'}(@TP*0.1,@DS*0.3)"
-                            }
-                        }
-                    }
-                }
+              }
             }
+          },
+          "R2": {
+            "Id": "SUBONEcalculR2",
+            "title": "SUBONEcalculR2",
+            "Rule_Type": "arithmeticLogic",
+            "Evaluation": {
+              "Condition": "'@REGIMESUBONE'=='mixte'",
+              "output": {
+                "true": {
+                  "bind": {
+                    "@CC": "Methods::{'SUM'}(@TP*0.1,@DS*0.3)"
+                  }
+                }
+              }
+            }
+          }
         },
-        "calculate_credits": {
-            "R1": {
-                "Id": "",
-                "title": "",
-                "Rule_Type": "",
-                "Evaluation": {
-                    "Condition": ""
-                }
+        "SUBONEcalcul2": {
+          "R1": {
+            "Id": "SUBONEcalcul2R1",
+            "title": "sub1sub1",
+            "Rule_Type": "",
+            "Evaluation": {
+              "Condition": ""
             }
+          }
         }
+      }
+    },
+    {
+      "title": "sub2",
+      "name": "sub2",
+      "ID": "1",
+      "description": "sub222ence et Mastère",
+      "input_variables": {
+        "TP": {
+          "type": "double|integer",
+          "value": 5
+        },
+        "DS": {
+          "type": "double|integer|string",
+          "value": 3,
+          "default": "",
+          "enum": "ABS,PR,DIP"
+        },
+        "CC": {
+          "type": "double|integer",
+          "value": ""
+        },
+        "EXAMSUBTWO": {
+          "type": "double|integer|string",
+          "value": "ABS",
+          "enum": "ABS,PR,DIP"
+        },
+        "EXAMSUBTWO_ABS": {
+          "type": "boolean",
+          "default": false,
+          "value": true
+        },
+        "CREDITSUBTWO": {
+          "type": "double|integer",
+          "readonly": true,
+          "value": ""
+        },
+        "SESSIONSUBTWO": {
+          "type": "string",
+          "value": ""
+        },
+        "REGIMESUBTWO": {
+          "type": "string",
+          "default": "mixte",
+          "value": "mixte"
+        }
+      },
+      "output_variables": {
+        "credit": {
+          "type": "double|integer",
+          "value": ""
+        },
+        "average": {
+          "type": "double|integer",
+          "value": ""
+        }
+      },
+      "Rules": {
+        "SUBTWOCALC": {
+          "R1": {
+            "Id": "SUBTWOCALCR1",
+            "title": "SUBTWOCALCR1",
+            "Rule_Type": "logic",
+            "Evaluation": {
+              "Condition": "'@EXAMSUBTWO'=='ABS'",
+              "output": {
+                "true": {
+                  "bind": {
+                    "@EXAMSUBTWO_ABS": "true",
+                    "@EXAMSUBTWO": 0
+                  }
+                },
+                "false": {
+                  "bind": {
+                    "@EXAMSUBTWO_ABS": "false"
+                  }
+                }
+              }
+            }
+          },
+          "R2": {
+            "Id": "SUBTWOCALCR2",
+            "title": "SUBTWOCALCR2",
+            "Rule_Type": "arithmeticLogic",
+            "Evaluation": {
+              "Condition": "'@REGIMESUBTWO'=='mixte'",
+              "output": {
+                "true": {
+                  "bind": {
+                    "@CC": "Methods::{'SUM'}(@TP*0.1,@DS*0.3)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "SUBTWOCALC2": {
+          "R1": {
+            "Id": "SUBTWOCALC2R1",
+            "title": "",
+            "Rule_Type": "",
+            "Evaluation": {
+              "Condition": ""
+            }
+          }
+        }
+      }
     }
+  ]
 }

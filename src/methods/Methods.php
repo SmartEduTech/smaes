@@ -14,4 +14,9 @@ abstract class Methods {
             return 0;
         }
     }
+    
+    public static function MAX(...$nums) {
+        return max($nums);
+    }
+    
 }

@@ -24,7 +24,7 @@ abstract class RulesFactory
                 if ($type != null) {
                     $class_name = ucfirst($type) . "Rules";
                     $ns = __NAMESPACE__ . '\\rule_types\\' . $class_name;
-                    $res = new $ns( $type);
+                    $res = new $ns($class_name ,$type);
                     $res->setType($type);
                     return $res;
                 }
